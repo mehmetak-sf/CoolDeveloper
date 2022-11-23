@@ -131,13 +131,37 @@ export default class LandingPageForm extends LightningElement {
             Country: this.country,
             Email: this.email,
             Phone: this.phone,
-            Info_Session_Date__c: this.infoDate,
             Company: 'Test Account',
             Ad__c: this.advertiseId ? this.advertiseId : ''
         }
 
     }
 
+    createLeadHandler() {
 
+        CreateLead({ singleLead: this.leadRecord, Search: this.UTM_Source })
+            .then(data => {
+                this.isRegistered = true;
+
+                const evt = new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Lead record has been created!',
+                    variant: 'success',
+                    mode: 'dismissable'
+                });
+                this.dispatchEvent(evt);
+            })
+            .catch(error => {
+                this.isRegistered = false;
+
+                const evt = new ShowToastEvent({
+                    title: 'Error',
+                    message: error.body.message,
+                    variant: 'error',
+                    mode: 'dismissable'
+                });
+                this.dispatchEvent(evt);
+            })
+    }
 
 }
